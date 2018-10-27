@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "name": "npmcdn-link",
+  "scripts": {
+    "lint": "eslint extension/",
+    "clean": "del-cli extension/* !extension/manifest.json",
+    "prebuild": "npm run clean",
+    "build": "bili",
+    "predev": "npm run clean",
+    "dev": "bili --watch"
+  },
+  "dependencies": {
+    "nanoassert": "^1.1.0",
+    "nanocomponent": "^6.5.2",
+    "nanohtml": "^1.2.6"
+  },
+  "devDependencies": {
+    "bili": "^3.1.2",
+    "del-cli": "^1.1.0",
+    "eslint": "^5.4.0",
+    "eslint-config-semistandard": "^13.0.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-standard": "^4.0.0"
+  }
+}
