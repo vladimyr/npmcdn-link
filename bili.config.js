@@ -1,12 +1,16 @@
+'use strict';
+
+/** @type {import('bili').Config} */
 module.exports = {
   input: 'src/index.js',
-  outDir: 'extension',
-  format: 'iife-min',
-  filename: 'content-script.js',
-  alias: {
-    assert: require.resolve('nanoassert')
+  output: {
+    dir: 'extension',
+    format: 'iife',
+    fileName: 'content-script[min].js'
   },
-  uglify: {
-    output: { ascii_only: true }
+  plugins: {
+    'node-resolve': {
+      browser: true
+    }
   }
 };

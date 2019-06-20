@@ -9,6 +9,6 @@
   "content_scripts": [{
     "run_at": "document_idle",
     "matches": ["https://www.npmjs.com/package/*"],
-    "js": ["content-script.min.js"]
+    "js": ["content-script.js"]
   }]
 }
