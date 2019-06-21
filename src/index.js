@@ -3,6 +3,8 @@ import { SidebarSectionLink, VersionLink } from './components';
 import { getMetadata, getLastSidebarSection, getVersions } from './ui';
 
 let activeTab;
+let unpkgSection;
+let anvakaSection;
 
 const insertBefore = (el, ref) => ref.parentElement.insertBefore(el, ref);
 const isComponent = el => Boolean(el.dataset.nanocomponent);
@@ -19,25 +21,23 @@ injectDevtoolsHook((_, root) => {
   onTabSelect(newActiveTab, oldActiveTab);
 });
 
-function onTabSelect(activeTab, oldActiveTab) {
-  if (!oldActiveTab) decorateSidebar();
+function onTabSelect(activeTab) {
+  decorateSidebar();
   if (activeTab === 'versions') decorateVersions();
 }
 
 function decorateSidebar() {
   const { name, version } = getMetadata();
-  const unpkgSection = new SidebarSectionLink().render({
+  unpkgSection = render(unpkgSection, {
     label: 'view contents',
     href: unpkgUrl(name, version),
     text: humanizeUrl(unpkgUrl(name, version))
   });
-  const anvakaSection = new SidebarSectionLink().render({
+  anvakaSection = render(anvakaSection, {
     label: 'visualize dependencies',
     href: anvakaUrl(name, version),
     text: humanizeUrl(anvakaUrl(name, version))
   });
-  insertBefore(unpkgSection, getLastSidebarSection());
-  insertBefore(anvakaSection, getLastSidebarSection());
 }
 
 function decorateVersions() {
@@ -52,4 +52,14 @@ function decorateVersions() {
     });
     insertBefore(link, spacer);
   });
+}
+
+function render(section, data) {
+  if (section) {
+    section.render(data);
+    return section;
+  }
+  section = new SidebarSectionLink();
+  insertBefore(section.render(data), getLastSidebarSection());
+  return section;
 }

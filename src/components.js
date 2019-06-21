@@ -2,13 +2,14 @@ import Nanocomponent from 'nanocomponent';
 import html from 'nanohtml';
 
 class BaseComponent extends Nanocomponent {
-  update({ name, version } = {}) {
-    return this.name !== name || this.version !== version;
+  update() {
+    return true;
   }
 }
 
 export class SidebarSectionLink extends BaseComponent {
   createElement({ label, href, text }) {
+    this.href = href;
     return html`
       <div class="dib w-100 bb b--black-10 pr2">
         <h3 class="f5 mt2 pt2 mb0 black-50">${label}</h3>
@@ -17,6 +18,10 @@ export class SidebarSectionLink extends BaseComponent {
         </p>
       </div>
     `;
+  }
+
+  update({ href } = {}) {
+    return href !== this.href;
   }
 }
 
