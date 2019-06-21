@@ -14,5 +14,5 @@ npm-debug.log*
 .DS_Store
 
 # build artifacts
-extension/**/*
-!extension/manifest.json
+extension/*
+!extension/.gitkeep

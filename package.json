@@ -3,7 +3,7 @@
   "name": "npmcdn-link",
   "scripts": {
     "lint": "eslint extension/",
-    "clean": "del-cli extension/* !extension/manifest.json",
+    "clean": "del-cli extension/* !extension/.gitkeep",
     "prebuild": "npm run clean",
     "build": "bili",
     "predev": "npm run clean",
@@ -22,6 +22,7 @@
     "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "rollup-plugin-cpy": "^1.1.0"
   }
 }
