@@ -1,4 +1,4 @@
-export default function injectDevtoolsHook(onCommitFiberRoot) {
+export default function injectHook(onCommitFiberRoot) {
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.__REACT_DEVTOOLS_GLOBAL_HOOK__ || {
     supportsFiber: true,
     inject: () => { }

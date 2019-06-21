@@ -1,8 +1,7 @@
-import injectDevtoolsHook, { getProps } from './reactHook.js';
+import injectHook, { getProps } from './reactHook.js';
 import { SidebarSectionLink, VersionLink } from './components';
 import { getMetadata, getLastSidebarSection, getVersions } from './ui';
 
-let activeTab;
 let unpkgSection;
 let anvakaSection;
 
@@ -13,18 +12,11 @@ const unpkgUrl = (name, version) => `https://unpkg.com/${name}@${version}/`;
 const anvakaUrl = (name, version) => `https://npm.anvaka.com/#/view/2d/${name}/${version}`;
 const humanizeUrl = url => url.replace(/^https?:\/\/(?:www\.)?/, '');
 
-injectDevtoolsHook((_, root) => {
-  const { activeTab: newActiveTab = 'readme' } = getProps(root);
-  if (newActiveTab === activeTab) return;
-  let oldActiveTab;
-  [activeTab, oldActiveTab] = [newActiveTab, activeTab];
-  onTabSelect(newActiveTab, oldActiveTab);
-});
-
-function onTabSelect(activeTab) {
+injectHook(function onTabRender(_, root) {
+  const { activeTab = 'readme' } = getProps(root);
   decorateSidebar();
   if (activeTab === 'versions') decorateVersions();
-}
+});
 
 function decorateSidebar() {
   const { name, version } = getMetadata();
