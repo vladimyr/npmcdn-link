@@ -1,10 +1,9 @@
 import injectDevtoolsHook, { getProps } from './reactHook.js';
 import { Link, SidebarSection } from './components';
-import { getLastSidebarSection, getVersions } from './ui';
+import { getMetadata, getLastSidebarSection, getVersions } from './ui';
 
 let activeTab;
 
-const getPackument = () => window.__context__.context.packument;
 const insertBefore = (el, ref) => ref.parentElement.insertBefore(el, ref);
 const isComponent = el => Boolean(el.dataset.nanocomponent);
 
@@ -23,7 +22,7 @@ function onTabSelect(activeTab, oldActiveTab) {
 
 function decorateSidebar() {
   const sidebarSection = new SidebarSection();
-  insertBefore(sidebarSection.render(getPackument()), getLastSidebarSection());
+  insertBefore(sidebarSection.render(getMetadata()), getLastSidebarSection());
 }
 
 function decorateVersions() {
@@ -31,7 +30,7 @@ function decorateVersions() {
     const spacer = el.nextElementSibling;
     if (isComponent(spacer)) return;
     const link = new Link();
-    const { name } = getPackument();
+    const { name } = getMetadata();
     const version = el.textContent.trim();
     insertBefore(link.render({ name, version }), spacer);
   });
