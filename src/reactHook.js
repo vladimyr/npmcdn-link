@@ -1,12 +1,17 @@
+const isFunction = arg => typeof arg === 'function';
+
 export default function injectHook(onCommitFiberRoot) {
-  window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.__REACT_DEVTOOLS_GLOBAL_HOOK__ || {
-    supportsFiber: true,
-    inject: () => { }
-  };
+  const desc = Object.getOwnPropertyDescriptor(window, '__REACT_DEVTOOLS_GLOBAL_HOOK__');
+  if (!desc || desc.writable) {
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = window.__REACT_DEVTOOLS_GLOBAL_HOOK__ || {
+      supportsFiber: true,
+      inject: () => { }
+    };
+  }
   const { onCommitFiberRoot: _onCommitFiberRoot } = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__.onCommitFiberRoot = function () {
     onCommitFiberRoot.apply(this, arguments);
-    if (onCommitFiberRoot) _onCommitFiberRoot.apply(this, arguments);
+    if (isFunction(_onCommitFiberRoot)) _onCommitFiberRoot.apply(this, arguments);
   };
 }
 
