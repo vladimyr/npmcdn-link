@@ -9,8 +9,8 @@ const humanizeUrl = url => url.replace(/^https?:\/\/(?:www\.)?/, '');
 const insertBefore = (el, ref) => ref.parentElement.insertBefore(el, ref);
 
 const anvakaUrl = (name, version) => `https://npm.anvaka.com/#/view/2d/${name}/${version}`;
-const npmfsUrl = (name, version) => `https://npmfs.com/package/${name}/${version}`;
-const unpkgUrl = (name, version) => `https://unpkg.com/${name}@${version}/`;
+const npmfsUrl = (name, version) => `https://npmfs.com/package/${name}/${version}/`;
+const unpkgUrl = (name, version) => `https://unpkg.com/browse/${name}@${version}/`;
 
 injectHook(function onTabRender(_, root) {
   const { activeTab = 'readme', package: pkg } = getProps(root);
