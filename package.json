@@ -2,7 +2,7 @@
   "private": true,
   "name": "npmcdn-link",
   "scripts": {
-    "lint": "eslint extension/",
+    "lint": "eslint .",
     "clean": "del-cli extension/* !extension/.gitkeep",
     "prebuild": "npm run clean",
     "build": "rollup -c rollup.config.js",
@@ -14,20 +14,20 @@
     "nanohtml": "^1.6.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "del-cli": "^2.0.0",
-    "eslint": "^6.0.0",
-    "eslint-config-semistandard": "^13.0.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.18.0",
+    "eslint": "^6.1.0",
+    "eslint-config-semistandard": "^14.0.0",
+    "eslint-config-standard": "^13.0.1",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
-    "rollup": "^1.16.2",
+    "rollup": "^1.19.4",
     "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-cpy": "^1.1.0",
-    "rollup-plugin-node-resolve": "^5.0.4"
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-cpy": "^2.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0"
   }
 }
