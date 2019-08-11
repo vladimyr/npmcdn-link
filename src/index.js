@@ -2,8 +2,8 @@ import injectHook, { getProps } from './reactHook.js';
 import { SidebarSectionLink, VersionLink } from './components';
 import { getMetadata, getLastSidebarSection, getVersions } from './ui';
 
-let unpkgSection;
-let anvakaSection;
+let unpkgSection = null;
+let anvakaSection = null;
 let versionLinks = [];
 
 const insertBefore = (el, ref) => ref.parentElement.insertBefore(el, ref);
@@ -13,7 +13,13 @@ const anvakaUrl = (name, version) => `https://npm.anvaka.com/#/view/2d/${name}/$
 const humanizeUrl = url => url.replace(/^https?:\/\/(?:www\.)?/, '');
 
 injectHook(function onTabRender(_, root) {
-  const { activeTab = 'readme' } = getProps(root);
+  const { activeTab = 'readme', package: pkg } = getProps(root);
+  if (!pkg) {
+    unpkgSection = null;
+    anvakaSection = null;
+    versionLinks = [];
+    return;
+  }
   const metadata = getMetadata();
   decorateSidebar(metadata);
   if (activeTab === 'versions') {
@@ -24,26 +30,26 @@ injectHook(function onTabRender(_, root) {
 });
 
 function decorateSidebar({ name, version }) {
-  const lastSection = getLastSidebarSection();
+  const $lastSection = getLastSidebarSection();
   unpkgSection = render(unpkgSection, SidebarSectionLink, {
     label: 'view contents',
     href: unpkgUrl(name, version),
     text: humanizeUrl(unpkgUrl(name, version))
-  }, lastSection);
+  }, $lastSection);
   anvakaSection = render(anvakaSection, SidebarSectionLink, {
     label: 'visualize dependencies',
     href: anvakaUrl(name, version),
     text: humanizeUrl(anvakaUrl(name, version))
-  }, lastSection);
+  }, $lastSection);
 }
 
 function decorateVersions({ name }) {
-  getVersions().forEach((el, index) => {
-    const version = el.textContent.trim();
+  getVersions().forEach(($el, index) => {
+    const version = $el.textContent.trim();
     versionLinks[index] = render(versionLinks[index], VersionLink, {
       text: '[browse files]',
       href: unpkgUrl(name, version)
-    }, el.nextElementSibling);
+    }, $el.nextElementSibling);
   });
 }
 

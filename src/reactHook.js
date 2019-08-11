@@ -10,7 +10,11 @@ export default function injectHook(onCommitFiberRoot) {
   }
   const { onCommitFiberRoot: _onCommitFiberRoot } = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__.onCommitFiberRoot = function () {
-    onCommitFiberRoot.apply(this, arguments);
+    try {
+      onCommitFiberRoot.apply(this, arguments);
+    } catch (err) {
+      console.error(err);
+    }
     if (isFunction(_onCommitFiberRoot)) _onCommitFiberRoot.apply(this, arguments);
   };
 }
