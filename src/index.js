@@ -2,22 +2,21 @@ import injectHook, { getProps } from './reactHook.js';
 import { SidebarSectionLink, VersionLink } from './components';
 import { getMetadata, getLastSidebarSection, getVersions } from './ui';
 
-let unpkgSection = null;
-let anvakaSection = null;
-let versionLinks = [];
+const sidebarSections = new Map();
+const versionLinks = new Map();
 
+const humanizeUrl = url => url.replace(/^https?:\/\/(?:www\.)?/, '');
 const insertBefore = (el, ref) => ref.parentElement.insertBefore(el, ref);
 
-const unpkgUrl = (name, version) => `https://unpkg.com/${name}@${version}/`;
 const anvakaUrl = (name, version) => `https://npm.anvaka.com/#/view/2d/${name}/${version}`;
-const humanizeUrl = url => url.replace(/^https?:\/\/(?:www\.)?/, '');
+const npmfsUrl = (name, version) => `https://npmfs.com/package/${name}/${version}`;
+const unpkgUrl = (name, version) => `https://unpkg.com/${name}@${version}/`;
 
 injectHook(function onTabRender(_, root) {
   const { activeTab = 'readme', package: pkg } = getProps(root);
   if (!pkg) {
-    unpkgSection = null;
-    anvakaSection = null;
-    versionLinks = [];
+    sidebarSections.clear();
+    versionLinks.clear();
     return;
   }
   const metadata = getMetadata();
@@ -25,18 +24,23 @@ injectHook(function onTabRender(_, root) {
   if (activeTab === 'versions') {
     decorateVersions(metadata);
   } else {
-    versionLinks = [];
+    versionLinks.clear();
   }
 });
 
 function decorateSidebar({ name, version }) {
   const $lastSection = getLastSidebarSection();
-  unpkgSection = render(unpkgSection, SidebarSectionLink, {
+  renderSection(sidebarSections, 'unpkg', {
     label: 'view contents',
     href: unpkgUrl(name, version),
     text: humanizeUrl(unpkgUrl(name, version))
   }, $lastSection);
-  anvakaSection = render(anvakaSection, SidebarSectionLink, {
+  renderSection(sidebarSections, 'npmfs', {
+    label: 'view contents',
+    href: npmfsUrl(name, version),
+    text: humanizeUrl(npmfsUrl(name, version))
+  }, $lastSection);
+  renderSection(sidebarSections, 'anvaka', {
     label: 'visualize dependencies',
     href: anvakaUrl(name, version),
     text: humanizeUrl(anvakaUrl(name, version))
@@ -46,11 +50,22 @@ function decorateSidebar({ name, version }) {
 function decorateVersions({ name }) {
   getVersions().forEach(($el, index) => {
     const version = $el.textContent.trim();
-    versionLinks[index] = render(versionLinks[index], VersionLink, {
+    const key = (index === 0) ? 'current' : version;
+    renderVersion(versionLinks, key, {
       text: '[browse files]',
       href: unpkgUrl(name, version)
     }, $el.nextElementSibling);
   });
+}
+
+function renderSection(components, key, data, ref) {
+  const component = components.get(key);
+  components.set(key, render(component, SidebarSectionLink, data, ref));
+}
+
+function renderVersion(components, key, data, ref) {
+  const component = components.get(key);
+  components.set(key, render(component, VersionLink, data, ref));
 }
 
 function render(component, Ctor, data, ref) {
