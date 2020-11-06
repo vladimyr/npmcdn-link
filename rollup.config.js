@@ -1,15 +1,15 @@
 'use strict';
 
-const babel = require('rollup-plugin-babel');
-const commonjs = require('rollup-plugin-commonjs');
+const { babel } = require('@rollup/plugin-babel');
+const commonjs = require('@rollup/plugin-commonjs');
 const copy = require('rollup-plugin-cpy');
 const path = require('path');
-const resolve = require('rollup-plugin-node-resolve');
+const resolve = require('@rollup/plugin-node-resolve').nodeResolve;
 
 const plugins = [
   resolve({ browser: true }),
   commonjs(),
-  babel()
+  babel({ babelHelpers: 'bundled' })
 ];
 
 /** @type {Array<import('rollup').RollupOptions>} */
