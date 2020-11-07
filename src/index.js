@@ -1,15 +1,17 @@
 import injectHook, { getProps } from './reactHook.js';
 import { SidebarSectionLink, VersionLink } from './components';
-import { getMetadata, getLastSidebarSection, getVersions } from './ui';
+import { getMetadata, getSidebarSection, getVersions } from './ui';
 
 const sidebarSections = new Map();
 const versionLinks = new Map();
 
 const humanizeUrl = url => url.replace(/^https?:\/\/(?:www\.)?/, '');
+const removeElement = el => el.parentElement.removeChild(el);
 const insertBefore = (el, ref) => ref.parentElement.insertBefore(el, ref);
 
 const anvakaUrl = (name, version) => `https://npm.anvaka.com/#/view/2d/${name}/${version}`;
 const npmfsUrl = (name, version) => `https://npmfs.com/package/${name}/${version}/`;
+const packagephobiaUrl = (name, version) => `https://packagephobia.com/result?p=${name}@${version}`;
 const unpkgUrl = (name, version) => `https://unpkg.com/browse/${name}@${version}/`;
 
 injectHook(function onTabRender(_, root) {
@@ -29,22 +31,33 @@ injectHook(function onTabRender(_, root) {
 });
 
 function decorateSidebar({ name, version }) {
-  const $lastSection = getLastSidebarSection();
+  const $sizeSection = getSidebarSection('Unpacked Size');
+  const $size = $sizeSection && $sizeSection.querySelector('h3 + p');
+  if ($size) {
+    renderSection(sidebarSections, 'packagephobia', {
+      label: 'Unpacked Size',
+      href: packagephobiaUrl(name, version),
+      text: $size.textContent,
+      width: 50
+    }, $sizeSection.nextElementSibling);
+    removeElement($sizeSection);
+  }
+  const $updatedAtSection = getSidebarSection('Last publish');
   renderSection(sidebarSections, 'unpkg', {
-    label: 'view contents',
+    label: 'View contents',
     href: unpkgUrl(name, version),
     text: humanizeUrl(unpkgUrl(name, version))
-  }, $lastSection);
+  }, $updatedAtSection);
   renderSection(sidebarSections, 'npmfs', {
-    label: 'view contents',
+    label: 'View contents',
     href: npmfsUrl(name, version),
     text: humanizeUrl(npmfsUrl(name, version))
-  }, $lastSection);
+  }, $updatedAtSection);
   renderSection(sidebarSections, 'anvaka', {
-    label: 'visualize dependencies',
+    label: 'Visualize dependencies',
     href: anvakaUrl(name, version),
     text: humanizeUrl(anvakaUrl(name, version))
-  }, $lastSection);
+  }, $updatedAtSection);
 }
 
 function decorateVersions({ name }) {

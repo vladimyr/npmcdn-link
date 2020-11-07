@@ -1,6 +1,5 @@
 const $query = (selector, context = document) => context.querySelector(selector);
 const $queryAll = (selector, context = document) => context.querySelectorAll(selector);
-const last = list => list.item(list.length - 1);
 
 export const classname = el => `[class^=${el.classList.item(0)}]`;
 
@@ -17,10 +16,15 @@ export function getMetadata() {
   return { name, version };
 }
 
-export function getLastSidebarSection() {
+export function getSidebarSection(title) {
+  const pattern = new RegExp(`^${title}$`, 'i');
   const $sidebar = $query(selector.sidebar);
   const $firstSection = $sidebar.children[3];
-  return last($queryAll(classname($firstSection), $sidebar));
+  const sectionTitles = [classname($firstSection), 'h3'].join(' ');
+  const $sectionTitle = Array.from($queryAll(sectionTitles)).find($title => {
+    return pattern.test($title.textContent);
+  });
+  return $sectionTitle && $sectionTitle.parentElement;
 }
 
 export function getVersions() {
@@ -30,6 +34,6 @@ export function getVersions() {
 }
 
 export default {
-  getLastSidebarSection,
+  getSidebarSection,
   getVersions
 };

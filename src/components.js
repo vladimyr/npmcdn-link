@@ -8,10 +8,10 @@ class BaseComponent extends Nanocomponent {
 }
 
 export class SidebarSectionLink extends BaseComponent {
-  createElement({ label, href, text }) {
+  createElement({ label, href, text, width = 100 }) {
     this.href = href;
     return html`
-      <div class="dib w-100 bb b--black-10 pr2">
+      <div class="dib w-${width} bb b--black-10 pr2">
         <h3 class="f5 mt2 pt2 mb0 black-50">${label}</h3>
         <p class="fw6 mb3 mt2 truncate black-80 f4">
           <a class="fw6 mb3 mt2 truncate black-80 f4 link" href=${href} rel="noopener">${text}</a>
